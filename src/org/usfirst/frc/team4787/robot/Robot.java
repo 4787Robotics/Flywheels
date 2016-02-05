@@ -33,7 +33,7 @@ public class Robot extends SampleRobot {
     Joystick stick;
 	 Joystick mechstick; JoystickButton trigger;
 	    final int  flywheel1_PWM = 0, flywheel2_PWM = 1,
-	    		angler1_PWM = 2, angler2_PWM = 3,
+	    		angler1_PWM = 2,
 	    		ballPusher_PWM = 9,
 	    		MECHSTICK_NUM = 0,
 	    		UP_LIMIT = 0, DN_LIMIT = 1; // PWM, Stick, and Limiter ports
@@ -47,7 +47,6 @@ public class Robot extends SampleRobot {
 	    Jaguar fly1 = new Jaguar(flywheel1_PWM);
 	    Jaguar fly2 = new Jaguar(flywheel2_PWM);
 	    Jaguar angler1 = new Jaguar(angler1_PWM);
-	    Jaguar angler2 = new Jaguar(angler2_PWM);
 	    Servo ballPusher1 = new Servo(ballPusher_PWM);
 	    
 	    double pusherPos=1, pusherMin=0, pusherMax=1, pusherStep = .007;
@@ -86,11 +85,9 @@ public class Robot extends SampleRobot {
         	System.out.println(mechy + "");
         	if(Math.abs(mechy) > DEADZONEY) {
         		angler1.set(mechy);
-        		angler2.set(-mechy);
         	}
         	else {
         		angler1.set(0);
-        		angler2.set(0);
         	}
         	
         	if(mechstick.getRawButton(2)) { // intake
@@ -101,6 +98,14 @@ public class Robot extends SampleRobot {
         		fly2.set(1);
             	if(mechstick.getRawButton(1)) { // trigger fires the ball.
             		pusherPos = pusherPos - pusherStep < pusherMin ? pusherMin : pusherPos - pusherStep;
+            		/**
+            		 * ternary operator: pusherPos = the thing after the ?
+            		 * if the thing between the = and the ? is true, the thing between the ? and the : will be equal to the thing before the =
+            		 * if it's false, pusherPos = the thing after the :
+            		 * 
+            		 * this was put here bc if you just set the servo to go to 1 or 0, it goes there as fast as it can to that position
+            		 * so this staggers it. 
+            		 */ 
             	}
         	} else {
         		fly1.set(0);
